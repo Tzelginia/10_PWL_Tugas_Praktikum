@@ -29,7 +29,7 @@
                     <!-- Tugas 1 Prak 10 -->
                     <div class="form-group">
                         <label for="foto">Foto</label>
-                        <input type="file" name="foto" class="form-control" id="foto" aria-describedby="foto">
+                        <input type="file" name="foto" class="form-control" id="foto" aria-describedby="foto" required="required">
                     </div>
                     <div class=" form-group">
                         <label for="kelas">Kelas</label>
