@@ -10,6 +10,7 @@ use App\Models\Mahasiswa_Matakuliah;
 use Illuminate\Support\Facades\Mail;
 use PhpParser\Node\Expr\New_;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 
 class MahasiswaController extends Controller
@@ -52,17 +53,18 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim' => 'required',
             'nama' => 'required',
-            'foto' => 'required',
+            'foto' => 'required', //menambahkan kolom foto
             'kelas' => 'required',
             'jurusan' => 'required',
         ]);
         // menambahkan foto
-        if ($request->file('foto')) {
-            $image_name = $request->file('foto')->store('images', 'public');
-        }
+        // if ($request->file('foto')) {
+        //     $image_name = $request->file('foto')->store('images', 'public');
+        // }
         $mahasiswa = new Mahasiswa();
         $mahasiswa->nim = $request->get('nim');
         $mahasiswa->nama = $request->get('nama');
+        $mahasiswa->foto = $request->file('foto')->store('images', 'public');
         $mahasiswa->kelas_id = $request->get('kelas');
         $mahasiswa->jurusan = $request->get('jurusan');
 
@@ -125,7 +127,7 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim' => 'required',
             'nama' => 'required',
-            'kelas' => 'required',
+            'kelas' => 'required', //menambahkan kolom foto
             'foto' => 'required',
             'jurusan' => 'required',
             //menambah 3 kolom pada controller
@@ -142,7 +144,7 @@ class MahasiswaController extends Controller
             Storage::delete('public/' . $mahasiswa->foto);
         }
         $image_name = $request->file('foto')->store('images', 'public');
-        $data['foto'] = $image_name;
+        $mahasiswa->foto = $image_name;
 
         $mahasiswa->kelas_id = $request->get('kelas');
         $mahasiswa->jurusan = $request->get('jurusan');
@@ -183,5 +185,14 @@ class MahasiswaController extends Controller
         $list = Mahasiswa_Matakuliah::with("matakuliah")->where("mahasiswa_id", $nim)->get();
         $list->mahasiswa = Mahasiswa::with('kelas')->where("nim", $nim)->first();
         return view('mahasiswa.nilai', compact('list'));
+    }
+    //menambahkan fungsi cetak_pdf (Tugas 2 prak 10)
+    public function cetak_pdf($nim)
+    {
+        // $mahasiswa = Mahasiswa::all();
+        $list = Mahasiswa_Matakuliah::with("matakuliah")->where("mahasiswa_id", $nim)->get();
+        $list->mahasiswa = Mahasiswa::with('kelas')->where("nim", $nim)->first();
+        $pdf = PDF::loadview('mahasiswa.nilai_pdf', compact('list'));
+        return $pdf->stream();
     }
 }
