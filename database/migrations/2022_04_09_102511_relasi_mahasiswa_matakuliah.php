@@ -15,10 +15,9 @@ class RelasiMahasiswaMatakuliah extends Migration
     {
         Schema::create('mahasiswa_matakuliah', function (Blueprint $table) {
             $table->id();
-            $table->string('mahasiswa_id', 10);
-            $table->foreign('mahasiswa_id')->references('nim')->on('mahasiswa')->onDelete('cascade');
-            
+            $table->string('mahasiswa_id', 10)->nullable();
             $table->unsignedBigInteger('matakuliah_id');
+            $table->foreign('mahasiswa_id')->references('nim')->on('mahasiswa')->onDelete('cascade');
             $table->foreign('matakuliah_id')->references('id')->on('matakuliah')->onDelete('cascade');
             $table->string('nilai', 1);
             $table->timestamps();
