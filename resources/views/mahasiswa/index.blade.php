@@ -35,7 +35,7 @@
     <tr>
         <td>{{ $mhs ->nim }}</td>
         <td>{{ $mhs ->nama }}</td>
-        <td><img width="100px" src="{{asset('storage/'.$mhs->foto)}}"></td>
+        <a class="btn btn-warning mt3" href="{{ route('mahasiswa.cetak_pdf',$list->mahasiswa->nim) }}">Cetak PDF</a>
         <td>{{ $mhs ->kelas->nama_kelas }}</td>
         <td>{{ $mhs ->jurusan }}</td>
         <td>
